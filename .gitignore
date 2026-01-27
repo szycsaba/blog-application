@@ -63,6 +63,12 @@ lerna-debug.log*
 # Laravel runtime cache (optional but safe)
 **/bootstrap/cache
 
+# Docker MySQL data
+/docker/mysql/data
+
+# Laravel storage (runtime)
+**/storage
+
 # Homestead (if used)
 Homestead.json
 Homestead.yaml
