@@ -1,32 +1,32 @@
 FROM php:8.5-fpm-alpine
 
-RUN apk add --no-cache \
-    git \
-    curl \
-    zip \
-    unzip \
-    libxml2-dev \
-    openssh \
-    libzip-dev \
-    libpng-dev \
-    libjpeg-turbo-dev \
-    freetype-dev \
-    oniguruma-dev \
-    icu-dev
+RUN --mount=type=cache,target=/var/cache/apk \
+    apk add --no-cache \
+        curl \
+        freetype-dev \
+        git \
+        icu-dev \
+        libjpeg-turbo-dev \
+        libpng-dev \
+        libxml2-dev \
+        libzip-dev \
+        oniguruma-dev \
+        openssh \
+        unzip \
+        zip \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) \
+        bcmath \
+        exif \
+        gd \
+        intl \
+        mbstring \
+        pcntl \
+        pdo_mysql \
+        xml \
+        zip
 
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-  && docker-php-ext-install -j$(nproc) \
-    gd \
-    intl \
-    pdo_mysql \
-    bcmath \
-    mbstring \
-    exif \
-    pcntl \
-    xml \
-    zip
-
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
