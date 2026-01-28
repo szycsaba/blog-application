@@ -11,4 +11,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'login']);
-Route::apiResource('posts', PostController::class);
+
+Route::get('posts', [PostController::class, 'index']);
+Route::get('posts/{post}', [PostController::class, 'show']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('me', [UserController::class, 'me']);
+    Route::post('posts', [PostController::class, 'store']);
+});

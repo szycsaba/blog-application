@@ -22,4 +22,11 @@ class UserController extends Controller
 
         return response()->json($response->toArray(), $response->status);
     }
+
+    public function me(UserService $userService): JsonResponse
+    {
+        $response = $userService->me();
+
+        return response()->json($response->toArray(), $response->status);
+    }
 }

@@ -20,9 +20,7 @@ class UserService
         try {
             $data['password'] = Hash::make($data['password']);
             $user = $this->repo->createUser($data);
-            $resource = (new UserResource(
-                array_merge($user, ['token' => null])
-            ))->toArray(request());
+            $resource = $this->userResource($user, false);
 
             return new ServiceResponse(
                 success: true,
@@ -55,9 +53,7 @@ class UserService
 
             $user->tokens()->delete();
             $token = $user->createToken('api')->plainTextToken;
-            $resource = (new UserResource(
-                array_merge($user->toArray(), ['token' => $token])
-            ))->toArray(request());
+            $resource = $this->userResource($user->toArray(), $token);
 
             return new ServiceResponse(
                 success: true,
@@ -73,5 +69,23 @@ class UserService
                 status: 500
             );
         }
+    }
+
+    public function me(): ServiceResponse
+    {
+        $user = auth()->user();
+
+        return new ServiceResponse(
+            success: true,
+            data: $this->userResource($user->toArray(), false),
+            status: 200
+        );
+    }
+
+    private function userResource(array $user, string|false $token): array
+    {
+        return (new UserResource(
+            $token === false ? $user : array_merge($user, ['token' => $token])
+        ))->toArray(request());
     }
 }
