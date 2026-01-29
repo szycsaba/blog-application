@@ -21,4 +21,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('posts/{post}/edit', [PostController::class, 'show'])->middleware(['can:view,post']);
     Route::put('posts/{post}', [PostController::class, 'update'])->middleware(['can:update,post']);
     Route::delete('posts/{post}', [PostController::class, 'destroy'])->middleware(['can:delete,post']);
+
+    Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->middleware('can:delete,comment');
 });

@@ -6,8 +6,8 @@ use App\DTO\CreateCommentData;
 use App\DTO\ServiceResponse;
 use App\Http\Resources\CommentResource;
 use App\Repositories\CommentRepositoryInterface;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class CommentService
@@ -41,6 +41,36 @@ class CommentService
             return new ServiceResponse(
                 success: false,
                 message: 'An error occurred while creating comment',
+                status: 500
+            );
+        }
+    }
+
+    public function deleteComment(int $id): ServiceResponse
+    {
+        try {
+            $this->repo->deleteComment($id);
+
+            return new ServiceResponse(
+                success: true,
+                message: 'Comment deleted successfully',
+                data: [],
+                status: 200
+            );
+        } catch (ModelNotFoundException $e) {
+            Log::error('Post not found: ' . $e->getMessage());
+
+            return new ServiceResponse(
+                success: false,
+                message: 'Comment not found',
+                status: 404
+            );
+        } catch (QueryException $e) {
+            Log::error('An error occurred while deleting comment: ' . $e->getMessage());
+
+            return new ServiceResponse(
+                success: false,
+                message: 'An error occurred while deleting comment',
                 status: 500
             );
         }
