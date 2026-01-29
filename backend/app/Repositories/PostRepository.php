@@ -32,4 +32,17 @@ class PostRepository implements PostRepositoryInterface
             ->findOrFail($post->id)
             ->toArray();
     }
+
+    public function updatePost(array $params): array
+    {
+        $post = Post::with('user')->findOrFail($params['id']);
+
+        $post->update([
+            'title'   => $params['title'],
+            'content' => $params['content'],
+        ]);
+
+        return $post->toArray();
+    }
+
 }

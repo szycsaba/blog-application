@@ -33,7 +33,7 @@ class PostService
             Log::error('An error occurred while fetching posts: ' . $e->getMessage());
             return new ServiceResponse(
                 success: false,
-                message: 'An error occurred while fetching books',
+                message: 'An error occurred while fetching posts',
                 status: 500
             );
         }
@@ -52,10 +52,10 @@ class PostService
                 status: 200
             );
         } catch (QueryException $e) {
-            Log::error('An error occurred while fetching posts: ' . $e->getMessage());
+            Log::error('An error occurred while fetching post: ' . $e->getMessage());
             return new ServiceResponse(
                 success: false,
-                message: 'An error occurred while fetching books',
+                message: 'An error occurred while fetching post',
                 status: 500
             );
         }
@@ -68,11 +68,6 @@ class PostService
 
             $params['user_id'] = $user->id;
             $post = $this->repo->createPost($params);
-
-            // $post['user'] = [
-            //     'id' => $user->id,
-            //     'name' => $user->name,
-            // ];
 
             $resource = (new PostResource($post))->toArray(request());
 
@@ -87,6 +82,29 @@ class PostService
             return new ServiceResponse(
                 success: false,
                 message: 'An error occurred while creating post',
+                status: 500
+            );
+        }
+    }
+
+    public function updatePost(array $params): ServiceResponse 
+    {
+        try {
+            $post = $this->repo->updatePost($params);
+
+            $resource = (new PostResource($post))->toArray(request());
+
+            return new ServiceResponse(
+                success: true,
+                message: 'Post updated successfully',
+                data: $resource,
+                status: 200
+            );
+        } catch (QueryException $e) {
+            Log::error('An error occurred while updating post: ' . $e->getMessage());
+            return new ServiceResponse(
+                success: false,
+                message: 'An error occurred while updating post',
                 status: 500
             );
         }

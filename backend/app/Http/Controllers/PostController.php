@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Services\PostService;
 use Illuminate\Http\JsonResponse;
@@ -34,9 +35,9 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $post, PostService $postService)
+    public function show(Post $post, PostService $postService)
     {
-        $response = $postService->showPost($post);
+        $response = $postService->showPost($post->id);
 
         return response()->json($response->toArray(), $response->status);
     }
@@ -44,9 +45,11 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(UpdatePostRequest $request, PostService $postService): JsonResponse
     {
-        //
+        $response = $postService->updatePost($request->validated());
+
+        return response()->json($response->toArray(), $response->status);
     }
 
     /**
