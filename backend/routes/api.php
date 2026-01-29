@@ -19,5 +19,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('user/me', [UserController::class, 'me']);
     Route::post('posts', [PostController::class, 'store']);
     Route::get('posts/{post}/edit', [PostController::class, 'show'])->middleware(['can:view,post']);
-    Route::put('posts', [PostController::class, 'update']);
+    Route::put('posts/{post}', [PostController::class, 'update'])->middleware(['can:update,post']);
 });

@@ -3,24 +3,23 @@
 namespace App\Repositories;
 
 use App\Models\Post;
+use Illuminate\Database\Eloquent\Collection;
 
 class PostRepository implements PostRepositoryInterface
 {
-    public function getPosts(): array
+    public function getPosts(): Collection
     {
         return Post::with(['user'])
-            ->get()
-            ->toArray();
+            ->get();
     }
 
-    public function showPost(int $id): array
+    public function showPost(int $id): Post
     {
         return Post::with(['user', 'comments'])
-            ->findOrFail($id)
-            ->toArray();
+            ->findOrFail($id);
     }
 
-    public function createPost(array $params): array
+    public function createPost(array $params): Post
     {
         $post = new Post();
         $post->user_id = $params['user_id'];
@@ -29,11 +28,10 @@ class PostRepository implements PostRepositoryInterface
         $post->save();
 
         return Post::with(['user'])
-            ->findOrFail($post->id)
-            ->toArray();
+            ->findOrFail($post->id);
     }
 
-    public function updatePost(array $params): array
+    public function updatePost(array $params): Post
     {
         $post = Post::with('user')->findOrFail($params['id']);
 
@@ -42,7 +40,7 @@ class PostRepository implements PostRepositoryInterface
             'content' => $params['content'],
         ]);
 
-        return $post->toArray();
+        return $post;
     }
 
 }

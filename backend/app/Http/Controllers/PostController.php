@@ -45,9 +45,12 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, PostService $postService): JsonResponse
+    public function update(UpdatePostRequest $request, Post $post, PostService $postService): JsonResponse
     {
-        $response = $postService->updatePost($request->validated());
+        $data = $request->validated();
+        $data['id'] = $post->id;
+
+        $response = $postService->updatePost($data);
 
         return response()->json($response->toArray(), $response->status);
     }

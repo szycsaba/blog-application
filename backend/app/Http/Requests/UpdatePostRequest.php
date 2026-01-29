@@ -22,7 +22,6 @@ class UpdatePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => ['required', 'int'],
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
         ];
@@ -31,8 +30,6 @@ class UpdatePostRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'id.required' => 'Post id is required.',
-            'id.int' => 'Post id must be integer.',
             'title.required' => 'Title is required.',
             'title.string' => 'Title must be a string.',
             'title.max' => 'Title must be at most 255 characters.',

@@ -6,6 +6,7 @@ use App\DTO\ServiceResponse;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\PostWithCommentsResource;
 use App\Repositories\PostRepositoryInterface;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
@@ -21,12 +22,10 @@ class PostService
         try {
             $posts = $this->repo->getPosts();
 
-            $resource = PostResource::collection($posts)->toArray(request());
-
             return new ServiceResponse(
                 success: true,
                 message: 'Posts listed successfully',
-                data: $resource,
+                data: PostResource::collection($posts)->toArray(request()),
                 status: 200
             );
         } catch (QueryException $e) {
@@ -43,13 +42,19 @@ class PostService
     {
         try {
             $post = $this->repo->showPost($id);
-            $resource = (new PostWithCommentsResource($post))->toArray(request());
 
             return new ServiceResponse(
                 success: true,
                 message: 'Post listed successfully',
-                data: $resource,
+                data: (new PostWithCommentsResource($post))->toArray(request()),
                 status: 200
+            );
+        } catch (ModelNotFoundException $e) {
+            Log::error('Post not found: ' . $e->getMessage());
+            return new ServiceResponse(
+                success: false,
+                message: 'Post not found',
+                status: 404
             );
         } catch (QueryException $e) {
             Log::error('An error occurred while fetching post: ' . $e->getMessage());
@@ -69,12 +74,10 @@ class PostService
             $params['user_id'] = $user->id;
             $post = $this->repo->createPost($params);
 
-            $resource = (new PostResource($post))->toArray(request());
-
             return new ServiceResponse(
                 success: true,
                 message: 'Post created successfully',
-                data: $resource,
+                data: (new PostResource($post))->toArray(request()),
                 status: 201
             );
         } catch (QueryException $e) {
@@ -92,13 +95,18 @@ class PostService
         try {
             $post = $this->repo->updatePost($params);
 
-            $resource = (new PostResource($post))->toArray(request());
-
             return new ServiceResponse(
                 success: true,
                 message: 'Post updated successfully',
-                data: $resource,
+                data: (new PostResource($post))->toArray(request()),
                 status: 200
+            );
+        } catch (ModelNotFoundException $e) {
+            Log::error('Post not found: ' . $e->getMessage());
+            return new ServiceResponse(
+                success: false,
+                message: 'Post not found',
+                status: 404
             );
         } catch (QueryException $e) {
             Log::error('An error occurred while updating post: ' . $e->getMessage());
