@@ -8,16 +8,28 @@ class PostRepository implements PostRepositoryInterface
 {
     public function getPosts(): array
     {
-        return Post::with(['user'])->get()->toArray();
+        return Post::with(['user'])
+            ->get()
+            ->toArray();
     }
 
     public function showPost(int $id): array
     {
-        return Post::with(['user', 'comments'])->findOrFail($id)->toArray();
+        return Post::with(['user', 'comments'])
+            ->findOrFail($id)
+            ->toArray();
     }
 
-    public function createPost(array $data): array
+    public function createPost(array $params): array
     {
-        return Post::create($data)->toArray();
+        $post = new Post();
+        $post->user_id = $params['user_id'];
+        $post->title = $params['title'];
+        $post->content = $params['content'];
+        $post->save();
+
+        return Post::with(['user'])
+            ->findOrFail($post->id)
+            ->toArray();
     }
 }

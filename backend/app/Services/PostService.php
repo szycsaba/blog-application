@@ -61,17 +61,19 @@ class PostService
         }
     }
 
-    public function createPost(array $data): ServiceResponse
+    public function createPost(array $params): ServiceResponse
     {
         try {
             $user = Auth::user();
 
-            $data['user_id'] = $user->id;
-            $post = $this->repo->createPost($data);
-            $post['user'] = [
-                'id' => $user->id,
-                'name' => $user->name,
-            ];
+            $params['user_id'] = $user->id;
+            $post = $this->repo->createPost($params);
+
+            // $post['user'] = [
+            //     'id' => $user->id,
+            //     'name' => $user->name,
+            // ];
+
             $resource = (new PostResource($post))->toArray(request());
 
             return new ServiceResponse(

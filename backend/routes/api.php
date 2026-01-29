@@ -16,6 +16,7 @@ Route::get('posts', [PostController::class, 'index']);
 Route::get('posts/{post}', [PostController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('me', [UserController::class, 'me']);
+    Route::get('user/me', [UserController::class, 'me']);
     Route::post('posts', [PostController::class, 'store']);
+    Route::get('posts/{post}/edit', [PostController::class, 'show']);
 });
