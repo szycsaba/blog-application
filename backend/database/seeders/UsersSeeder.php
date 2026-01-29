@@ -17,18 +17,21 @@ class UsersSeeder extends Seeder
             'name' => 'admin',
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
+            'is_admin' => true,
         ]);
 
         User::create([
             'name' => 'john',
             'email' => 'john@example.com',
             'password' => Hash::make('password'),
+            'is_admin' => false,
         ]);
 
         User::create([
             'name' => 'susan',
             'email' => 'susan@example.com',
             'password' => Hash::make('password'),
+            'is_admin' => false,
         ]);
     }
 }
