@@ -72,6 +72,9 @@ services:
     image: node:20-alpine
     container_name: frontend
     working_dir: /app
+    environment:
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "250"
     volumes:
       - ./frontend:/app:cached
       # Named volume for node_modules

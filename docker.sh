@@ -9,6 +9,7 @@
 # ./docker.sh -dev-fresh
 # ./docker.sh -init-backend
 # ./docker.sh -init-frontend
+# ./docker.sh -composer-install
 # ./docker.sh -stop
 
 DOCKER="winpty docker"
@@ -25,9 +26,8 @@ stop_stack()
 
 dev()
 {
-    $DOCKER compose up -d --build
-    $DOCKER compose run --rm frontend npm ci
-    $DOCKER compose exec php composer install
+    $DOCKER compose up -d
+    $DOCKER compose up -d frontend
 }
 
 dev_fresh()
@@ -55,6 +55,11 @@ init_frontend()
     fi
 
     $DOCKER compose run --rm frontend sh -lc "npm create vite@latest . -- --template react"
+}
+
+composer_install()
+{
+    $DOCKER compose exec php composer install
 }
 
 fresh()
@@ -112,6 +117,11 @@ fi
 
 if [ "$1" == "-init-frontend" ]; then
     init_frontend
+    stop
+fi
+
+if [ "$1" == "-composer-install" ]; then
+    composer_install
     stop
 fi
 
