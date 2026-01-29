@@ -117,4 +117,34 @@ class PostService
             );
         }
     }
+
+    public function deletePost(int $id): ServiceResponse
+    {
+        try {
+            $this->repo->deletePost($id);
+
+            return new ServiceResponse(
+                success: true,
+                message: 'Post deleted successfully',
+                data: [],
+                status: 200
+            );
+        } catch (ModelNotFoundException $e) {
+            Log::error('Post not found: ' . $e->getMessage());
+
+            return new ServiceResponse(
+                success: false,
+                message: 'Post not found',
+                status: 404
+            );
+        } catch (QueryException $e) {
+            Log::error('An error occurred while deleting post: ' . $e->getMessage());
+
+            return new ServiceResponse(
+                success: false,
+                message: 'An error occurred while deleting post',
+                status: 500
+            );
+        }
+    }
 }

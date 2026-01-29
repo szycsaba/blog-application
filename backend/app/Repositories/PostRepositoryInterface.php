@@ -11,4 +11,5 @@ interface PostRepositoryInterface
     public function showPost(int $id): Post;
     public function createPost(array $params): Post;
     public function updatePost(array $params): Post;
+    public function deletePost(int $id): void;
 }

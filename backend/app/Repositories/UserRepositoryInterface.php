@@ -2,8 +2,10 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
+
 interface UserRepositoryInterface
 {
-    public function createUser(array $data): array;
-    public function findByEmail(string $email): ?\App\Models\User;
+    public function createUser(array $data): User;
+    public function findByEmail(string $email): ?User;
 }

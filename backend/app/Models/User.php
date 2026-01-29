@@ -10,8 +10,6 @@ class User extends Authenticatable
 {
     use HasApiTokens;
 
-    protected $dateFormat = 'Y-m-d H:i:s';
-
     /**
      * The attributes that are mass assignable.
      *
@@ -42,8 +40,6 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
-            'created_at' => 'datetime:Y-m-d H:i:s',
-            'updated_at' => 'datetime:Y-m-d H:i:s',
         ];
     }
 

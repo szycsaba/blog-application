@@ -18,18 +18,17 @@ class UserService
     public function register(array $data): ServiceResponse
     {
         try {
-            $data['password'] = Hash::make($data['password']);
             $user = $this->repo->createUser($data);
-            $resource = $this->userResource($user, false);
 
             return new ServiceResponse(
                 success: true,
                 message: 'User registered successfully',
-                data: $resource,
+                data: (new UserResource($user))->toArray(request()),
                 status: 201
             );
         } catch (QueryException $e) {
             Log::error('An error occurred while registering user: ' . $e->getMessage());
+
             return new ServiceResponse(
                 success: false,
                 message: 'An error occurred while registering user',
@@ -53,16 +52,19 @@ class UserService
 
             $user->tokens()->delete();
             $token = $user->createToken('api')->plainTextToken;
-            $resource = $this->userResource($user->toArray(), $token);
+
+            $payload = (new UserResource($user))->toArray(request());
+            $payload['token'] = $token;
 
             return new ServiceResponse(
                 success: true,
                 message: 'Login successful',
-                data: $resource,
+                data: $payload,
                 status: 200
             );
         } catch (QueryException $e) {
             Log::error('An error occurred while logging in: ' . $e->getMessage());
+
             return new ServiceResponse(
                 success: false,
                 message: 'An error occurred while logging in',
@@ -77,15 +79,8 @@ class UserService
 
         return new ServiceResponse(
             success: true,
-            data: $this->userResource($user->toArray(), false),
+            data: (new UserResource($user))->toArray(request()),
             status: 200
         );
-    }
-
-    private function userResource(array $user, string|false $token): array
-    {
-        return (new UserResource(
-            $token === false ? $user : array_merge($user, ['token' => $token])
-        ))->toArray(request());
     }
 }

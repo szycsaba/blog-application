@@ -58,8 +58,10 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post, PostService $postService)
     {
-        //
+        $response = $postService->deletePost($post->id);
+
+        return response()->json($response->toArray(), $response->status);
     }
 }
