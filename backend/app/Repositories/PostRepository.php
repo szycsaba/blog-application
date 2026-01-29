@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+use App\DTO\CreatePostData;
+use App\DTO\UpdatePostData;
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -19,25 +21,25 @@ class PostRepository implements PostRepositoryInterface
             ->findOrFail($id);
     }
 
-    public function createPost(array $params): Post
+    public function createPost(CreatePostData $data): Post
     {
         $post = new Post();
-        $post->user_id = $params['user_id'];
-        $post->title = $params['title'];
-        $post->content = $params['content'];
+        $post->user_id = $data->userId;
+        $post->title = $data->title;
+        $post->content = $data->content;
         $post->save();
 
         return Post::with(['user'])
             ->findOrFail($post->id);
     }
 
-    public function updatePost(array $params): Post
+    public function updatePost(UpdatePostData $data): Post
     {
-        $post = Post::with('user')->findOrFail($params['id']);
+        $post = Post::with('user')->findOrFail($data->id);
 
         $post->update([
-            'title'   => $params['title'],
-            'content' => $params['content'],
+            'title'   => $data->title,
+            'content' => $data->content,
         ]);
 
         return $post;

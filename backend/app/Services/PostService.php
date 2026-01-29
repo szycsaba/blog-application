@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\DTO\CreatePostData;
+use App\DTO\UpdatePostData;
 use App\DTO\ServiceResponse;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\PostWithCommentsResource;
@@ -71,8 +73,12 @@ class PostService
         try {
             $user = Auth::user();
 
-            $params['user_id'] = $user->id;
-            $post = $this->repo->createPost($params);
+            $data = new CreatePostData(
+                userId: $user->id,
+                title: $params['title'],
+                content: $params['content'],
+            );
+            $post = $this->repo->createPost($data);
 
             return new ServiceResponse(
                 success: true,
@@ -93,7 +99,12 @@ class PostService
     public function updatePost(array $params): ServiceResponse 
     {
         try {
-            $post = $this->repo->updatePost($params);
+            $data = new UpdatePostData(
+                id: $params['id'],
+                title: $params['title'],
+                content: $params['content'],
+            );
+            $post = $this->repo->updatePost($data);
 
             return new ServiceResponse(
                 success: true,
