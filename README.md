@@ -34,12 +34,6 @@ The frontend talks to the backend via JSON endpoints using the response envelope
 
 This starts the Docker Compose stack (MySQL, PHP-FPM, Apache, frontend, phpMyAdmin).
 
-To stop the stack:
-
-```bash
-./docker.sh -stop
-```
-
 6. Generate Laravel app key:
 
 ```bash
@@ -50,6 +44,12 @@ To stop the stack:
 
 ```bash
 ./artisan.sh migrate --seed
+```
+
+To stop the stack:
+
+```bash
+./docker.sh -stop
 ```
 
 ## Testing (Manual)
