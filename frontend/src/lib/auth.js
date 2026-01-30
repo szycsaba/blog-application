@@ -8,8 +8,6 @@ const API_BASE_URL = RAW_BASE_URL.endsWith("/")
   : RAW_BASE_URL;
 
 export async function login(email, password) {
-  // Backend response example:
-  // { success: true/false, message: string, data: { ...userFields, token } }
   const res = await fetch(`${API_BASE_URL}/user/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

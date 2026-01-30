@@ -6,9 +6,11 @@ import Register from "./pages/Register";
 import Post from "./pages/Post";
 import PageNotFound from "./pages/PageNotFound";
 import AppLayout from "./layouts/AppLayout";
+import { AuthProvider } from "./features/auth/AuthContext";
 
 function App() {
   return (
+    <AuthProvider>
       <Routes>
         <Route element={<AppLayout />}>
           <Route path="/" element={<Home />} />
@@ -19,6 +21,7 @@ function App() {
           <Route path="*" element={<PageNotFound />} />
         </Route>
       </Routes>
+    </AuthProvider>
   );
 }
 

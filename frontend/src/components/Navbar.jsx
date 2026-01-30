@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
-import { getStoredUser, isLoggedIn, logout } from "../lib/auth";
+import { useAuth } from "../features/auth/AuthContext";
 
 export default function Navbar() {
-  const loggedIn = isLoggedIn();
-  const user = getStoredUser();
+  const { loggedIn, user, logout } = useAuth();
 
   return (
     <header className="bg-white border-b">
@@ -19,32 +18,31 @@ export default function Navbar() {
                 to="/user/login"
                 className="inline-flex items-center justify-center h-10 px-3 sm:px-4 rounded-md border text-sm font-medium hover:bg-gray-50"
               >
-                Belépés
+                Login
               </Link>
               <Link
                 to="/user/register"
                 className="inline-flex items-center justify-center h-10 px-3 sm:px-4 rounded-md bg-black text-white text-sm font-medium hover:opacity-90"
               >
-                Regisztráció
+                Register
               </Link>
               <span className="hidden sm:inline ml-2 text-sm text-gray-600">
-                Nincs bejelentkezve
+                Not logged in
               </span>
             </>
           ) : (
             <>
               <button
                 onClick={() => {
-                  // Keep it simple: clear localStorage and reload.
                   logout();
                   window.location.href = "/user/login";
                 }}
                 className="inline-flex items-center justify-center h-10 px-3 sm:px-4 rounded-md border text-sm font-medium hover:bg-gray-50"
               >
-                Kijelentkezés
+                Logout
               </button>
               <span className="hidden sm:inline ml-2 text-sm text-gray-600">
-                Bejelentkezve{user?.name ? `: ${user.name}` : ""}
+                Logged in{user?.name ? `: ${user.name}` : ""}
               </span>
             </>
           )}

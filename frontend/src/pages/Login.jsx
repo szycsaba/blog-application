@@ -1,8 +1,10 @@
 import { useState } from "react";
-// useNavigate is not needed because we do a simple redirect after login.
-import { login as loginApi } from "../lib/auth";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../features/auth/AuthContext";
 
 export default function Login() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
@@ -14,9 +16,8 @@ export default function Login() {
     setPending(true);
 
     try {
-      await loginApi(email, password);
-      // Keep it simple: full reload so Navbar reads the latest localStorage values.
-      window.location.href = "/";
+      await login(email, password);
+      navigate("/");
     } catch (err) {
       setError(err.message || "Sikertelen belépés.");
     } finally {
