@@ -48,7 +48,10 @@ composer_install()
 {
     # Runs composer install in an ephemeral container (no need to start the stack).
     # This is intended to be executed BEFORE ./docker.sh -start on a fresh clone.
-    $DOCKER compose run --rm --no-deps php sh -lc "composer install --no-interaction --prefer-dist --optimize-autoloader"
+    $DOCKER compose run --rm --no-deps php sh -lc "\
+      mkdir -p bootstrap/cache storage bootstrap/cache \
+      && chmod -R 775 bootstrap/cache storage \
+      && composer install --no-interaction --prefer-dist --optimize-autoloader"
 }
 
 frontend_install()
@@ -60,8 +63,8 @@ frontend_install()
 
 install()
 {
-    composer_install
-    frontend_install
+    composer_install || return 1
+    frontend_install || return 1
 }
 
 fresh()
