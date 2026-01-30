@@ -1,12 +1,9 @@
 #!/bin/bash
 
 # Examples
-# ./docker.sh -help
 # ./docker.sh -start
 # ./docker.sh -start-fresh
 # ./docker.sh -fresh
-# ./docker.sh -dev
-# ./docker.sh -dev-fresh
 # ./docker.sh -init-backend
 # ./docker.sh -init-frontend
 # ./docker.sh -composer-install
@@ -22,18 +19,6 @@ start()
 stop_stack()
 {
     $DOCKER compose stop
-}
-
-dev()
-{
-    $DOCKER compose up -d
-    $DOCKER compose up -d frontend
-}
-
-dev_fresh()
-{
-    fresh
-    dev
 }
 
 init_backend()
@@ -97,16 +82,6 @@ fi
 
 if [ "$1" == "-start" ]; then
     start
-    stop
-fi
-
-if [ "$1" == "-dev" ]; then
-    dev
-    stop
-fi
-
-if [ "$1" == "-dev-fresh" ]; then
-    dev_fresh
     stop
 fi
 
