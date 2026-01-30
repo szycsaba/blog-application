@@ -7,6 +7,8 @@
 # ./docker.sh -init-backend
 # ./docker.sh -init-frontend
 # ./docker.sh -composer-install
+# ./docker.sh -frontend-install
+# ./docker.sh -install
 # ./docker.sh -stop
 
 DOCKER="winpty docker"
@@ -44,7 +46,22 @@ init_frontend()
 
 composer_install()
 {
-    $DOCKER compose exec php composer install
+    # Runs composer install in an ephemeral container (no need to start the stack).
+    # This is intended to be executed BEFORE ./docker.sh -start on a fresh clone.
+    $DOCKER compose run --rm --no-deps php sh -lc "composer install --no-interaction --prefer-dist --optimize-autoloader"
+}
+
+frontend_install()
+{
+    # Runs npm install in an ephemeral container (no need to start the stack).
+    # This is intended to be executed BEFORE ./docker.sh -start on a fresh clone.
+    $DOCKER compose run --rm --no-deps frontend sh -lc "npm install"
+}
+
+install()
+{
+    composer_install
+    frontend_install
 }
 
 fresh()
@@ -97,6 +114,16 @@ fi
 
 if [ "$1" == "-composer-install" ]; then
     composer_install
+    stop
+fi
+
+if [ "$1" == "-frontend-install" ]; then
+    frontend_install
+    stop
+fi
+
+if [ "$1" == "-install" ]; then
+    install
     stop
 fi
 
