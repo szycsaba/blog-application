@@ -1,6 +1,3 @@
-// Simple authentication helpers for the frontend.
-// This project uses Bearer tokens returned by the backend login endpoint.
-
 const DEFAULT_API_BASE_URL = "http://localhost:8000";
 const RAW_BASE_URL = import.meta.env.VITE_API_BASE_URL || DEFAULT_API_BASE_URL;
 const API_BASE_URL = RAW_BASE_URL.endsWith("/")
@@ -16,28 +13,38 @@ export async function login(email, password) {
 
   const payload = await res.json().catch(() => null);
 
-  if (!res.ok) {
-    throw new Error(payload?.message || "Login failed.");
-  }
-
-  if (!payload?.success) {
-    throw new Error(payload?.message || "Login failed.");
+  if (!res.ok || !payload?.success) {
+    throw new Error(payload?.message || "");
   }
 
   const data = payload?.data;
   const token = data?.token;
 
   if (!token) {
-    throw new Error("Backend did not return a token for login.");
+    throw new Error(payload?.message || "");
   }
 
-  // Persist token and user (without token) in localStorage.
   localStorage.setItem("token", token);
-
   const { token: _ignored, ...user } = data;
   localStorage.setItem("user", JSON.stringify(user));
 
   return data;
+}
+
+export async function register(name, email, password) {
+  const res = await fetch(`${API_BASE_URL}/user/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password }),
+  });
+
+  const payload = await res.json().catch(() => null);
+
+  if (!res.ok || !payload?.success) {
+    throw new Error(payload?.message || "");
+  }
+
+  return payload?.data || null;
 }
 
 export function logout() {
@@ -61,3 +68,4 @@ export function getStoredUser() {
     return null;
   }
 }
+

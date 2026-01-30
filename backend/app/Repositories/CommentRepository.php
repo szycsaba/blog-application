@@ -16,7 +16,7 @@ class CommentRepository implements CommentRepositoryInterface
     $comment->comment = $data->comment;
     $comment->save();
 
-    return $comment;
+    return Comment::with(['user'])->findOrFail($comment->id);
 
   }
 

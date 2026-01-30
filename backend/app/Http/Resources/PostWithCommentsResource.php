@@ -26,6 +26,7 @@ class PostWithCommentsResource extends JsonResource
                     'id' => $comment->id,
                     'post_id' => $comment->post_id,
                     'user_id' => $comment->user_id,
+                    'name' => $comment->user?->name,
                     'comment' => $comment->comment,
                     'created_at' => $comment->created_at,
                     'updated_at' => $comment->updated_at,

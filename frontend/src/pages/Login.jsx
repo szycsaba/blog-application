@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/AuthContext";
+import Container from "../components/ui/Container";
+import TextInput from "../components/ui/TextInput";
+import Button from "../components/ui/Button";
+import FormError from "../components/ui/FormError";
 
 export default function Login() {
   const { login } = useAuth();
@@ -19,19 +23,18 @@ export default function Login() {
       await login(email, password);
       navigate("/");
     } catch (err) {
-      setError(err.message || "Sikertelen belépés.");
+      setError(err.message || "Failed to login.");
     } finally {
       setPending(false);
     }
   }
 
   return (
-    <section className="mx-auto max-w-md px-4 py-10">
-      <h1 className="text-2xl font-semibold">Belépés</h1>
+    <Container size="sm" className="py-10">
+      <h1 className="text-2xl font-semibold">Login</h1>
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-3">
-        <input
-          className="w-full h-10 px-3 rounded-md border"
+      <form onSubmit={handleSubmit} noValidate className="mt-6 space-y-3">
+        <TextInput
           type="email"
           placeholder="E-mail"
           value={email}
@@ -40,8 +43,7 @@ export default function Login() {
           required
         />
 
-        <input
-          className="w-full h-10 px-3 rounded-md border"
+        <TextInput
           type="password"
           placeholder="Jelszó"
           value={password}
@@ -50,16 +52,12 @@ export default function Login() {
           required
         />
 
-        {error ? <p className="text-sm text-red-600">{error}</p> : null}
+        <FormError message={error} />
 
-        <button
-          type="submit"
-          disabled={pending}
-          className="w-full h-10 rounded-md bg-black text-white text-sm font-medium hover:opacity-90 disabled:opacity-60"
-        >
-          {pending ? "Beléptetés..." : "Belépés"}
-        </button>
+        <Button type="submit" disabled={pending} fullWidth>
+          {pending ? "Login..." : "Login"}
+        </Button>
       </form>
-    </section>
+    </Container>
   );
 }

@@ -11,14 +11,17 @@ class PostRepository implements PostRepositoryInterface
 {
     public function getPosts(): Collection
     {
-        return Post::with(['user'])
+        return Post::with(['user'])->orderByDesc('created_at')
             ->get();
     }
 
     public function showPost(int $id): Post
     {
-        return Post::with(['user', 'comments'])
-            ->findOrFail($id);
+        return Post::with([
+            'user',
+            'comments' => fn ($q) => $q->orderByDesc('created_at'),
+            'comments.user',
+        ])->findOrFail($id);
     }
 
     public function createPost(CreatePostData $data): Post

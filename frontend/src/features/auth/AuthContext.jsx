@@ -3,6 +3,7 @@ import {
   getStoredUser,
   isLoggedIn,
   login as loginApi,
+  register as registerApi,
   logout as logoutApi,
 } from "../../lib/auth";
 
@@ -18,6 +19,10 @@ export function AuthProvider({ children }) {
     setUser(getStoredUser());
   }
 
+  async function register(name, email, password) {
+    return await registerApi(name, email, password);
+  }
+
   function logout() {
     logoutApi();
     setLoggedIn(false);
@@ -25,7 +30,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loggedIn, login, logout }}>
+    <AuthContext.Provider value={{ user, loggedIn, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
